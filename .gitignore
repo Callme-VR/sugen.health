@@ -11,6 +11,7 @@ node_modules
 .env.development.local
 .env.test.local
 .env.production.local
+.turbo-clone-temp
 
 # Testing
 coverage
@@ -27,7 +28,6 @@ out/
 build
 dist
 
-
 # Debug
 npm-debug.log*
 yarn-debug.log*
@@ -36,3 +36,10 @@ yarn-error.log*
 # Misc
 .DS_Store
 *.pem
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+*.egg-info/
+apps/backend/data/decisions.jsonl

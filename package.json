@@ -4,7 +4,12 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
+    "dev:frontend": "turbo run dev --filter=frontend",
+    "dev:backend": "cd apps/backend && uv run uvicorn app.main:app --reload --port 8000",
     "lint": "turbo run lint",
+    "lint:backend": "cd apps/backend && uv run ruff check .",
+    "test:backend": "cd apps/backend && uv run pytest",
+    "eval": "cd apps/backend && uv run python eval/run_eval.py",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types"
   },
