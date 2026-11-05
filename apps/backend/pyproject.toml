@@ -1,9 +1,9 @@
 [project]
 name = "icd-backend"
 version = "0.1.0"
-description = "Add your description here"
+description = "Evidence-checked ICD-11 coding assistant backend"
 readme = "README.md"
-requires-python = ">=3.14"
+requires-python = ">=3.11"
 dependencies = [
     "fastapi>=0.162.0",
     "google-genai>=2.34.0",
@@ -20,3 +20,11 @@ dev = [
     "respx>=0.23.1",
     "ruff>=0.17.3",
 ]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
+ignore = ["E501"]

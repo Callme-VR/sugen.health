@@ -1,0 +1,153 @@
+{
+  "note_01": {
+    "expected_codes": ["BA00", "5A11", "BA41"],
+    "tags": ["multi_condition", "negation"],
+    "marker": "TODO REVIEW"
+  },
+  "note_02": {
+    "expected_codes": ["CA40"],
+    "tags": ["family_history", "negation"],
+    "marker": "TODO REVIEW"
+  },
+  "note_03": {
+    "expected_codes": ["DB10"],
+    "tags": ["hypothetical"],
+    "marker": "TODO REVIEW"
+  },
+  "note_04": {
+    "expected_codes": ["CA23"],
+    "tags": ["abbreviation"],
+    "marker": "TODO REVIEW"
+  },
+  "note_05": {
+    "expected_codes": ["BA42"],
+    "tags": ["negation", "multi_condition"],
+    "marker": "TODO REVIEW"
+  },
+  "note_06": {
+    "expected_codes": ["8A84"],
+    "tags": ["family_history"],
+    "marker": "TODO REVIEW"
+  },
+  "note_07": {
+    "expected_codes": ["DA20"],
+    "tags": ["hypothetical", "contradiction"],
+    "marker": "TODO REVIEW"
+  },
+  "note_08": {
+    "expected_codes": ["GB61"],
+    "tags": ["abbreviation"],
+    "marker": "TODO REVIEW"
+  },
+  "note_09": {
+    "expected_codes": ["5B51"],
+    "tags": ["family_history", "negation"],
+    "marker": "TODO REVIEW"
+  },
+  "note_10": {
+    "expected_codes": ["FA00"],
+    "tags": ["multi_condition"],
+    "marker": "TODO REVIEW"
+  },
+  "note_11": {
+    "expected_codes": ["8A80"],
+    "tags": ["hypothetical", "negation"],
+    "marker": "TODO REVIEW"
+  },
+  "note_12": {
+    "expected_codes": ["9B02"],
+    "tags": ["abbreviation"],
+    "marker": "TODO REVIEW"
+  },
+  "note_13": {
+    "expected_codes": ["1B10"],
+    "tags": ["negation", "abbreviation"],
+    "marker": "TODO REVIEW"
+  },
+  "note_14": {
+    "expected_codes": ["5C80"],
+    "tags": ["family_history", "multi_condition"],
+    "marker": "TODO REVIEW"
+  },
+  "note_15": {
+    "expected_codes": ["GB00"],
+    "tags": ["abbreviation", "hypothetical"],
+    "marker": "TODO REVIEW"
+  },
+  "note_16": {
+    "expected_codes": ["AA00"],
+    "tags": ["negation"],
+    "marker": "TODO REVIEW"
+  },
+  "note_17": {
+    "expected_codes": ["CA20"],
+    "tags": ["contradiction"],
+    "marker": "TODO REVIEW"
+  },
+  "note_18": {
+    "expected_codes": ["DA60"],
+    "tags": ["hypothetical"],
+    "marker": "TODO REVIEW"
+  },
+  "note_19": {
+    "expected_codes": ["FA20"],
+    "tags": ["family_history", "contradiction"],
+    "marker": "TODO REVIEW"
+  },
+  "note_20": {
+    "expected_codes": ["5B50"],
+    "tags": ["abbreviation"],
+    "marker": "TODO REVIEW"
+  },
+  "note_21": {
+    "expected_codes": ["BA00", "CA40"],
+    "tags": ["multi_condition"],
+    "marker": "TODO REVIEW"
+  },
+  "note_22": {
+    "expected_codes": ["5A10"],
+    "tags": ["family_history"],
+    "marker": "TODO REVIEW"
+  },
+  "note_23": {
+    "expected_codes": ["1D01"],
+    "tags": ["hypothetical"],
+    "marker": "TODO REVIEW"
+  },
+  "note_24": {
+    "expected_codes": ["BA41"],
+    "tags": ["negation", "contradiction"],
+    "marker": "TODO REVIEW"
+  },
+  "note_25": {
+    "expected_codes": ["1A00"],
+    "tags": ["abbreviation"],
+    "marker": "TODO REVIEW"
+  },
+  "note_26": {
+    "expected_codes": ["DB10"],
+    "tags": ["hypothetical", "negation"],
+    "marker": "TODO REVIEW"
+  },
+  "note_27": {
+    "expected_codes": ["FA00", "5A11"],
+    "tags": ["multi_condition"],
+    "marker": "TODO REVIEW"
+  },
+  "note_28": {
+    "expected_codes": ["8A84"],
+    "tags": ["family_history", "negation"],
+    "marker": "TODO REVIEW"
+  },
+  "note_29": {
+    "expected_codes": ["GB61"],
+    "tags": ["abbreviation", "contradiction"],
+    "marker": "TODO REVIEW"
+  },
+  "note_30": {
+    "expected_codes": ["CA23"],
+    "tags": ["hypothetical", "multi_condition"],
+    "marker": "TODO REVIEW"
+  }
+}
+

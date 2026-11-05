@@ -1,0 +1,5 @@
+CARDIOLOGY ADMISSION:
+Patient brought via EMS with crushing substernal chest pain.
+ECG shows ST-elevation in leads V1-V4, diagnostic of acute myocardial infarction.
+History of essential hypertension.
+Patient denies history of stroke.

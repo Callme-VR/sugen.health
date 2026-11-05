@@ -1,0 +1,4 @@
+CARDIOLOGY ENCOUNTER:
+Patient with known exertional angina pectoris.
+Patient denies chest pain at rest today.
+Patient previously reported no chest pain, but acknowledges exertional angina when queried.

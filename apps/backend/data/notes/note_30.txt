@@ -1,0 +1,4 @@
+HOSPITAL DISCHARGE SUMMARY:
+Patient admitted for severe community-acquired pneumonia.
+Also noted to have essential hypertension on maintenance therapy.
+Rule out hospital-acquired superinfection.

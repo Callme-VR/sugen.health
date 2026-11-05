@@ -1,0 +1,7 @@
+CLINICAL ENCOUNTER:
+A 34-year-old female presents with recurrent wheezing, nocturnal coughing, and chest tightness.
+She has a childhood diagnosis of asthma, exacerbated by seasonal allergies.
+Mother had rheumatoid arthritis.
+Patient currently denies acute chest pain and denies fever.
+Prescribed inhaled corticosteroid.
+

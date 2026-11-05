@@ -1,0 +1,28 @@
+[
+  {"code": "BA41", "title": "Angina pectoris", "confirmed": true},
+  {"code": "BA42", "title": "Acute myocardial infarction", "confirmed": true},
+  {"code": "BA00", "title": "Essential hypertension", "confirmed": true},
+  {"code": "5A11", "title": "Type 2 diabetes mellitus", "confirmed": true},
+  {"code": "5A10", "title": "Type 1 diabetes mellitus", "confirmed": true},
+  {"code": "CA23", "title": "Pneumonia", "confirmed": true},
+  {"code": "CA40", "title": "Asthma", "confirmed": true},
+  {"code": "CA20", "title": "Acute bronchitis", "confirmed": true},
+  {"code": "8A80", "title": "Epilepsy", "confirmed": true},
+  {"code": "8A84", "title": "Migraine", "confirmed": true},
+  {"code": "9B02", "title": "Cataract", "confirmed": true},
+  {"code": "AA00", "title": "Otitis media", "confirmed": true},
+  {"code": "DA20", "title": "Gastro-oesophageal reflux disease", "confirmed": true},
+  {"code": "DA60", "title": "Gastric ulcer", "confirmed": true},
+  {"code": "DB10", "title": "Acute appendicitis", "confirmed": true},
+  {"code": "FA00", "title": "Osteoarthritis", "confirmed": true},
+  {"code": "FA20", "title": "Rheumatoid arthritis", "confirmed": true},
+  {"code": "GB61", "title": "Urinary tract infection", "confirmed": true},
+  {"code": "GB00", "title": "Acute kidney injury", "confirmed": true},
+  {"code": "1B10", "title": "Tuberculosis", "confirmed": true},
+  {"code": "1D01", "title": "Measles", "confirmed": true},
+  {"code": "1A00", "title": "Cholera", "confirmed": true},
+  {"code": "5B51", "title": "Hypothyroidism", "confirmed": true},
+  {"code": "5B50", "title": "Hyperthyroidism", "confirmed": true},
+  {"code": "5C80", "title": "Hypercholesterolaemia", "confirmed": true}
+]
+
