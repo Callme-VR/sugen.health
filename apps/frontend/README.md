@@ -1,67 +1,61 @@
-# ICD-11 Assistant — Frontend
+# 💻 ICD-11 Assistant — Frontend Review Client
 
-Next.js 16 (App Router) review interface for the evidence-checked ICD-11 coding assistant.
+High-performance Next.js 16 (App Router) clinical review interface styled with Tailwind CSS v4, shadcn/ui components, OKLCH design tokens, and fluid micro-animations.
 
-> **Disclaimer:** Operates on synthetic clinical notes for demonstration and review. Never commit or display real patient health information (PHI).
-
----
-
-## User Interface Overview
-
-The frontend acts as a pure presentation and human-in-the-loop review client:
-
-1. **Note Catalog (`/`)**:
-   - Browse synthetic clinical notes.
-   - Quick navigation into the review workspace for each note.
-
-2. **Review Workspace (`/review/[noteId]`)**:
-   - **Split-Screen Layout**:
-     - **Left Pane (`NoteViewer.tsx`)**: Displays raw note text with exact character offset highlighting for cited evidence quotes (handles overlapping spans).
-     - **Right Pane (`SuggestionCard.tsx`)**: Displays suggested ICD-11 codes, official code titles, accessible status badges, plain-English verifier explanations, and human reviewer action controls (`Approve`, `Edit`, `Reject`).
-   - **Accessible Status Badges (`StatusBadge.tsx`)**: Status displayed with distinctive text and icons alongside color coding (`verified`, `needs_review`, `rejected`).
-   - **Reviewer Safeguards**:
-     - Codes marked `rejected` are collapsed by default.
-     - Approving a verifier-rejected code enforces an explicit written justification.
-     - Editing permits typing alternative ICD-11 codes with rationale.
-   - **Audit Trail**: Panel displaying append-only reviewer decision records from `/decisions`.
-   - **Footer Disclaimer**: Visible disclaimer on all pages: *"Demo on synthetic data. Not for clinical use."*
+[![Next.js](https://img.shields.io/badge/Next.js-16.4.5-000000?style=flat-square&logo=nextdotjs&logoColor=white)](https://nextjs.org)
+[![React](https://img.shields.io/badge/React-19.3.0-61DAFB?style=flat-square&logo=react&logoColor=black)](https://react.dev)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-v4-38B2AC?style=flat-square&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
+[![shadcn/ui](https://img.shields.io/badge/shadcn%2Fui-Preset_b3bXza9jg8-black?style=flat-square)](https://ui.shadcn.com)
 
 ---
 
-## Technical Stack
+## ✨ Features & Motion Design
 
-- **Framework**: Next.js 16 (App Router)
-- **Styling**: Tailwind CSS
-- **Package Manager**: Bun
-- **API Integration**: Typed HTTP client (`src/lib/api.ts`) connecting to FastAPI backend via `NEXT_PUBLIC_API_BASE_URL`.
+1. **Encounter Catalog Dashboard (`/`)**:
+   - Modern grid of clinical encounters with status indicators.
+   - Micro-interaction hover states with smooth transition easing.
+   - Real-time connection feedback with the FastAPI backend.
+
+2. **Split-Screen Review Workspace (`/review/[noteId]`)**:
+   - **Left Pane (`NoteViewer.tsx`)**: Raw clinical note rendered with dynamic, non-overlapping highlighted spans based on exact character offsets.
+     - 🟢 **Verified**: Emerald highlight (`bg-emerald-100`).
+     - 🟡 **Needs Review**: Amber warning highlight (`bg-amber-100`).
+     - 🔴 **Rejected**: Rose highlight with strike-through styling.
+   - **Right Pane (`SuggestionCard.tsx`)**:
+     - Status badges with Lucide icons (`CheckCircle2`, `AlertTriangle`, `XCircle`).
+     - Collapsed-by-default state for verifier-rejected suggestions to prevent accidental approval.
+     - Inline code editing mode allowing clinicians to override candidate codes.
+     - Enforced written justification input when overriding a rejected suggestion.
+   - **Real-Time Audit Trail (`DecisionLogPanel.tsx`)**:
+     - Append-only decision list updating immediately on approval, edit, or rejection.
+
+3. **Motion & Feedback**:
+   - Extraction loading spinner (`Loader2`, `animate-spin`) during AI analysis.
+   - Accordion collapse/expand transitions for rejected candidate cards.
+   - React Suspense boundaries for zero-blocking initial page renders.
 
 ---
 
-## Getting Started
+## 🎨 Theme & Design Tokens
 
-### 1. Environment Configuration
+Configured with shadcn/ui preset `b3bXza9jg8` with OKLCH color space:
+
+- `--primary`: `oklch(0.488 0.243 264.376)`
+- `--background`: `oklch(1 0 0)` (Dark: `oklch(0.141 0.005 285.823)`)
+- `--card`: `oklch(1 0 0)` (Dark: `oklch(0.21 0.006 285.885)`)
+- Complete dark mode support automatically matching OS color preferences.
+
+---
+
+## 🚀 Development & Build
 
 ```bash
-# apps/frontend/.env.local
-NEXT_PUBLIC_API_BASE_URL=http://localhost:8000
-```
-
-### 2. Development Server
-
-```bash
+# Start development server on port 3000
 bun run dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) to view the application.
-
----
-
-## Quality & Build Commands
-
-```bash
-# Lint frontend
-bun run lint
-
-# Production build
+# Run Next.js production build with Turbopack & TypeScript check
 bun run build
+
+# Run ESLint validation
+bun run lint
 ```

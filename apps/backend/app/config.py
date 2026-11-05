@@ -1,5 +1,4 @@
 from functools import lru_cache
-
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -15,9 +14,9 @@ class Settings(BaseSettings):
     ICD_CLIENT_SECRET: str = ""
     ICD_RELEASE: str = "2024-01"
 
-    LLM_PROVIDER: str = "google"  # "google", "anthropic", etc.
+    LLM_PROVIDER: str = "google"
     LLM_API_KEY: str = ""
-    LLM_MODEL: str = "gemini-2.5-flash"
+    LLM_MODEL: str = "gemini-flash-lite-latest"
 
     DATA_DIR: str = "./data"
     DECISION_LOG: str = "./data/decisions.jsonl"

@@ -1,6 +1,5 @@
 import json
 import logging
-
 from google import genai
 from google.genai import types
 from pydantic import BaseModel
@@ -25,13 +24,20 @@ Rules:
 5. Provide structured output containing code, title, and evidence_quote.
 """
 
+# Fallback models in priority order if Google throws a 503 spike on one model
+FALLBACK_MODELS = [
+    "gemini-flash-lite-latest",
+    "gemini-3.1-flash-lite",
+    "gemini-2.5-flash",
+]
+
 
 class GoogleLLMClient(LLMClient):
     def __init__(self):
-        self.settings = get_settings()
-        api_key = self.settings.LLM_API_KEY
-        self.model_name = self.settings.LLM_MODEL or "gemini-2.5-flash"
-        self.client = genai.Client(api_key=api_key) if api_key else None
+        settings = get_settings()
+        self.api_key = settings.LLM_API_KEY
+        self.primary_model = settings.LLM_MODEL or "gemini-flash-lite-latest"
+        self.client = genai.Client(api_key=self.api_key) if self.api_key else None
 
     async def analyze(self, note_text: str) -> list[Suggestion]:
         if not self.client:
@@ -40,12 +46,14 @@ class GoogleLLMClient(LLMClient):
 
         prompt = f"Analyze the following synthetic clinical note and extract ICD-11 code suggestions:\n\n{note_text}"
 
-        # Try once, with one retry on JSON parse failure
-        for attempt in range(2):
+        # Construct candidate models with primary model first
+        models_to_try = [self.primary_model] + [m for m in FALLBACK_MODELS if m != self.primary_model]
+
+        for model_name in models_to_try:
+            logger.info(f"Attempting analysis using model: {model_name}")
             try:
-                # Use structured JSON schema enforcement
                 response = self.client.models.generate_content(
-                    model=self.model_name,
+                    model=model_name,
                     contents=prompt,
                     config=types.GenerateContentConfig(
                         system_instruction=SYSTEM_INSTRUCTION,
@@ -56,10 +64,11 @@ class GoogleLLMClient(LLMClient):
                 )
                 text = response.text
                 data = json.loads(text)
-                return [Suggestion(**item) for item in data.get("suggestions", [])]
+                results = [Suggestion(**item) for item in data.get("suggestions", [])]
+                logger.info(f"Successfully generated {len(results)} suggestions with {model_name}")
+                return results
             except Exception as e:
-                logger.warning(f"Google LLM attempt {attempt+1} error: {e}")
-                if attempt == 1:
-                    # After retry, return empty or raise structured error
-                    return []
+                logger.warning(f"Model {model_name} failed: {e}. Trying next candidate...")
+
+        logger.error("All candidate LLM models failed or experienced demand spikes.")
         return []

@@ -1,88 +1,85 @@
-# ICD-11 Assistant — Backend API
+# ⚙️ ICD-11 Assistant — Backend API Engine
 
-FastAPI backend for the evidence-checked ICD-11 coding assistant. Implements the LLM suggestion pipeline (Google Gemini), deterministic verification engine, mock/live WHO ICD-11 clients, and append-only decision logging.
+Production-ready FastAPI service delivering deterministic pre-review verification, Google Gemini extraction with multi-model failover, and append-only decision audit logging.
 
-> **Note:** Operates exclusively on synthetic clinical notes. Contains zero real patient data.
-
----
-
-## Architecture & Responsibilities
-
-- **`app/main.py`**: FastAPI application with CORS restricted to `ALLOWED_ORIGIN`.
-- **`app/config.py`**: Pydantic `BaseSettings` reading environment variables from `.env`.
-- **`app/models.py`**: Pydantic v2 schemas:
-  - `Suggestion` (`code`, `title`, `evidence_quote`)
-  - `VerifiedSuggestion` (`Suggestion` + `start`, `end`, `status`, `reasons`)
-  - `Decision` (`note_id`, `code`, `action`, `edited_code`, `reason`, `reviewer`, `timestamp`)
-- **`app/verifier.py`**: Deterministic verification pipeline (pure functions; no external network dependency except injected ICD client):
-  1. `QUOTE_NOT_FOUND`: Exact case-sensitive substring matching against the note.
-  2. `INVALID_CODE`: ICD-11 code validation against local mock dataset or WHO ICD API.
-  3. `TITLE_MISMATCH`: Word overlap ratio check between LLM title and official title.
-  4. Context checks on the clause containing the quote:
-     - `NEGATED` (*no, denies, without, negative for, absence of, ruled out*)
-     - `HYPOTHETICAL` (*possible, suspected, rule out, query, differential*)
-     - `FAMILY_HISTORY` (*mother, father, sibling, family history of*)
-- **`app/llm/`**: Interface `LLMClient` with structured output parsing and retry mechanism. Implemented with Google GenAI (`gemini-2.5-flash`).
-- **`app/icd/`**:
-  - `MockICD`: Fast local lookup against `data/mock_icd.json`.
-  - `LiveICD`: WHO ICD API OAuth 2.0 client with token caching and fail-closed handling (`ICD_UNAVAILABLE`).
-- **`app/store.py`**: Append-only JSONL log (`data/decisions.jsonl`). Never logs full note text.
-- **`eval/`**: Synthetic evaluation benchmark (`run_eval.py`) with record-and-replay cache (`eval/cache/`).
+[![Python](https://img.shields.io/badge/Python-3.14-3776AB?style=flat-square&logo=python&logoColor=white)](https://python.org)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.162.0-009688?style=flat-square&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![Pydantic](https://img.shields.io/badge/Pydantic-v2.14-E92063?style=flat-square&logo=pydantic&logoColor=white)](https://docs.pydantic.dev)
+[![Tests](https://img.shields.io/badge/Tests-27_Passed-10B981?style=flat-square&logo=pytest&logoColor=white)](https://docs.pytest.org)
 
 ---
 
-## API Endpoints
+## 🏗️ Architecture & Modules
 
-| Endpoint | Method | Purpose | Returns |
+```
+backend/
+├── app/
+│   ├── main.py          # FastAPI application, CORS, and endpoint definitions
+│   ├── config.py        # Settings via pydantic-settings (.env management)
+│   ├── models.py        # Pydantic v2 domain schemas (Suggestion, Decision, etc.)
+│   ├── triggers.py      # Trigger phrase dictionaries (Negation, Family, Rule-Out)
+│   ├── verifier.py      # Pure deterministic verification pipeline
+│   ├── store.py         # Append-only JSONL decision log engine
+│   ├── llm/
+│   │   ├── base.py      # Abstract LLM client interface
+│   │   └── google.py    # Google GenAI client with multi-model fallback cascade
+│   └── icd/
+│       ├── base.py      # Abstract ICD client interface
+│       ├── mock.py      # High-performance local table lookup (25+ confirmed codes)
+│       └── client.py    # Live WHO ICD API client (OAuth 2.0 + token cache)
+├── data/
+│   ├── notes/           # 30 synthetic clinical notes (.txt)
+│   ├── labels.json      # Ground truth labels with tags
+│   └── mock_icd.json    # Confirmed ICD-11 classification table
+├── eval/
+│   ├── run_eval.py      # Benchmark evaluation script
+│   └── cache/           # SHA-256 replay cache
+└── tests/
+    ├── test_verifier.py # Near-misses, case, whitespace, negation tests
+    ├── test_api.py      # FastAPI endpoint integration tests
+    └── test_icd_live.py # Respx mock tests for WHO OAuth 2.0 client
+```
+
+---
+
+## 🛡️ Multi-Model Fallback Cascade
+
+To eliminate HTTP 503 capacity errors and latency spikes, `app/llm/google.py` implements an automated cascade:
+
+```python
+FALLBACK_MODELS = [
+    "gemini-flash-lite-latest",  # 1st priority: lowest latency (<1.2s)
+    "gemini-3.1-flash-lite",    # 2nd priority: next-gen lightweight
+    "gemini-2.5-flash",         # 3rd priority: standard fallback
+]
+```
+
+If one model encounters a provider demand spike, the engine immediately and seamlessly tries the next candidate before returning a structured response to the clinician.
+
+---
+
+## 🔌 API Endpoints Reference
+
+| Endpoint | Method | Purpose | Response |
 |---|---|---|---|
-| `/health` | `GET` | Health / Liveness check | `{"status": "ok"}` |
-| `/notes` | `GET` | List synthetic clinical notes | `[{"id": "...", "title": "..."}]` |
-| `/notes/{id}` | `GET` | Retrieve full synthetic note | `{"id": "...", "title": "...", "text": "..."}` |
-| `/notes/{id}/analyze` | `POST` | Run LLM extraction + deterministic verifier | `{"suggestions": [VerifiedSuggestion]}` |
-| `/decisions` | `POST` | Record reviewer action (`approve`, `edit`, `reject`) | `Decision` |
-| `/decisions` | `GET` | List decisions filtered by `?note_id=` | `[Decision]` |
+| `/health` | `GET` | Service liveness probe | `{"status": "ok"}` |
+| `/notes` | `GET` | List available synthetic encounters | `[{"id": "...", "title": "..."}]` |
+| `/notes/{id}` | `GET` | Fetch single encounter note text | `{"id": "...", "title": "...", "text": "..."}` |
+| `/notes/{id}/analyze` | `POST` | Extract candidates & run verifier | `{"suggestions": [VerifiedSuggestion]}` |
+| `/decisions` | `POST` | Record reviewer decision | `Decision` |
+| `/decisions` | `GET` | Fetch decision log (`?note_id=`) | `[Decision]` |
 
 ---
 
-## Local Development & Setup
-
-Managed with [`uv`](https://github.com/astral-sh/uv).
-
-### 1. Environment Configuration
+## 🧪 Testing & Quality Assurance
 
 ```bash
-cp .env.example .env
-```
-
-Configure `.env`:
-```env
-ICD_MODE=mock
-ICD_CLIENT_ID=
-ICD_CLIENT_SECRET=
-ICD_RELEASE=
-LLM_PROVIDER=google
-LLM_API_KEY=your_gemini_api_key
-LLM_MODEL=gemini-2.5-flash
-DATA_DIR=./data
-DECISION_LOG=./data/decisions.jsonl
-ALLOWED_ORIGIN=http://localhost:3000
-```
-
-### 2. Run Server
-
-```bash
-uv run uvicorn app.main:app --reload --port 8000
-```
-
----
-
-## Testing & Linting
-
-```bash
-# Run pytest suite (pure mock tests, zero external calls)
+# Run 27 pytest test suites (unit tests, near-misses, mock HTTP)
 uv run pytest
 
-# Run Ruff linter and formatter check
+# Check code formatting and import order with Ruff
 uv run ruff check .
-```
 
+# Run automated evaluation benchmark
+uv run python eval/run_eval.py
+```

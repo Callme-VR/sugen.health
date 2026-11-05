@@ -16,6 +16,9 @@ import {
 import { NoteViewer } from "@/components/NoteViewer";
 import { SuggestionCard } from "@/components/SuggestionCard";
 import { DecisionLogPanel } from "@/components/DecisionLogPanel";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { ArrowLeft, Sparkles, Loader2, AlertCircle, FileCheck, Layers } from "lucide-react";
 
 function ReviewContent() {
   const params = useParams();
@@ -88,21 +91,24 @@ function ReviewContent() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-zinc-50 dark:bg-zinc-950 text-zinc-500 text-sm">
-        Loading encounter note...
+      <div className="min-h-screen flex items-center justify-center bg-background text-muted-foreground text-sm gap-2">
+        <Loader2 className="w-5 h-5 animate-spin text-primary" />
+        <span>Loading clinical encounter note...</span>
       </div>
     );
   }
 
   if (error && !note) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center gap-4 bg-zinc-50 dark:bg-zinc-950 p-6">
-        <p className="text-rose-600 text-sm font-semibold">{error}</p>
-        <Link
-          href="/"
-          className="text-xs font-semibold text-blue-600 hover:underline"
-        >
-          &larr; Return to Catalog
+      <div className="min-h-screen flex flex-col items-center justify-center gap-4 bg-background p-6">
+        <div className="p-4 bg-destructive/10 text-destructive border border-destructive/20 rounded-xl text-sm font-semibold flex items-center gap-2">
+          <AlertCircle className="w-5 h-5" />
+          <span>{error}</span>
+        </div>
+        <Link href="/">
+          <Button variant="outline" size="sm">
+            <ArrowLeft className="w-3.5 h-3.5 mr-1.5" /> Return to Catalog
+          </Button>
         </Link>
       </div>
     );
@@ -116,43 +122,46 @@ function ReviewContent() {
   }));
 
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 flex flex-col justify-between p-6 md:p-10">
+    <div className="min-h-screen bg-background text-foreground flex flex-col justify-between p-4 md:p-8">
       <div className="max-w-7xl mx-auto w-full space-y-6">
         {/* Navigation Bar */}
-        <header className="flex flex-wrap items-center justify-between gap-4 border-b border-zinc-200 dark:border-zinc-800 pb-4">
+        <header className="flex flex-wrap items-center justify-between gap-4 border-b border-border/80 pb-4">
           <div className="flex items-center gap-3">
-            <Link
-              href="/"
-              className="text-xs font-semibold px-2.5 py-1 rounded bg-zinc-200 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-300 transition-colors"
-            >
-              &larr; Back
+            <Link href="/">
+              <Button variant="ghost" size="sm" className="gap-1.5 text-xs">
+                <ArrowLeft className="w-3.5 h-3.5" /> Catalog
+              </Button>
             </Link>
-            <div>
-              <h1 className="text-xl font-bold tracking-tight">
+            <div className="border-l border-border/70 pl-3">
+              <h1 className="text-lg md:text-xl font-bold tracking-tight">
                 {note?.title}
               </h1>
-              <p className="text-xs text-zinc-500">ID: {noteId}</p>
+              <p className="text-xs font-mono text-muted-foreground">ID: {noteId}</p>
             </div>
           </div>
-          <button
+          <Button
             onClick={handleAnalyze}
             disabled={analyzing}
-            className="px-4 py-2 text-xs font-semibold rounded-lg bg-blue-600 hover:bg-blue-700 text-white transition-colors cursor-pointer disabled:opacity-50 flex items-center gap-2"
+            className="gap-2 shadow-xs"
           >
             {analyzing ? (
               <>
-                <span className="animate-spin text-xs">&#x27F3;</span>
-                <span>Running Verifier...</span>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                <span>Running Deterministic Verifier...</span>
               </>
             ) : (
-              <span>Run AI Extraction & Verification</span>
+              <>
+                <Sparkles className="w-4 h-4" />
+                <span>Extract & Verify ICD-11 Codes</span>
+              </>
             )}
-          </button>
+          </Button>
         </header>
 
         {error && (
-          <div className="p-3 text-xs bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 rounded-lg border border-rose-200 dark:border-rose-900">
-            {error}
+          <div className="p-3 text-xs bg-destructive/10 text-destructive rounded-lg border border-destructive/20 flex items-center gap-2">
+            <AlertCircle className="w-4 h-4 shrink-0" />
+            <span>{error}</span>
           </div>
         )}
 
@@ -161,22 +170,22 @@ function ReviewContent() {
           {/* Left Pane: Raw Clinical Note with Highlighted Evidence */}
           <div className="lg:col-span-7 space-y-3">
             <div className="flex items-center justify-between">
-              <h2 className="text-xs font-semibold uppercase tracking-wider text-zinc-500">
-                Synthetic Clinical Note & Evidence Spans
+              <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+                <FileCheck className="w-3.5 h-3.5" /> Note Text & Cited Evidence Spans
               </h2>
-              <div className="flex items-center gap-3 text-[11px] text-zinc-500">
-                <span className="flex items-center gap-1">
-                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block" />
+              <div className="flex items-center gap-2 text-xs">
+                <Badge variant="outline" className="text-[11px] font-normal gap-1 py-0 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/30">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block" />
                   Verified
-                </span>
-                <span className="flex items-center gap-1">
-                  <span className="w-2.5 h-2.5 rounded-full bg-amber-400 inline-block" />
+                </Badge>
+                <Badge variant="outline" className="text-[11px] font-normal gap-1 py-0 bg-amber-500/10 text-amber-700 dark:text-amber-300 border-amber-500/30">
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500 inline-block" />
                   Needs Review
-                </span>
-                <span className="flex items-center gap-1">
-                  <span className="w-2.5 h-2.5 rounded-full bg-rose-400 inline-block" />
+                </Badge>
+                <Badge variant="outline" className="text-[11px] font-normal gap-1 py-0 bg-rose-500/10 text-rose-700 dark:text-rose-300 border-rose-500/30">
+                  <span className="w-1.5 h-1.5 rounded-full bg-rose-500 inline-block" />
                   Rejected
-                </span>
+                </Badge>
               </div>
             </div>
             <NoteViewer text={note?.text || ""} highlights={highlights} />
@@ -185,15 +194,21 @@ function ReviewContent() {
           {/* Right Pane: Suggestions & Decisions */}
           <div className="lg:col-span-5 space-y-5">
             <div>
-              <h2 className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-3">
-                Suggested ICD-11 Codes ({suggestions.length})
-              </h2>
+              <div className="flex items-center justify-between mb-3">
+                <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+                  <Layers className="w-3.5 h-3.5" /> Candidate Diagnoses
+                </h2>
+                <Badge variant="secondary" className="text-[11px] font-normal">
+                  {suggestions.length} suggestions
+                </Badge>
+              </div>
 
               {suggestions.length === 0 ? (
-                <div className="bg-white dark:bg-zinc-900 border border-dashed border-zinc-300 dark:border-zinc-800 rounded-xl p-8 text-center text-xs text-zinc-500 space-y-2">
-                  <p>No suggestions generated yet.</p>
-                  <p className="text-[11px] text-zinc-400">
-                    Click &ldquo;Run AI Extraction & Verification&rdquo; above to analyze the note text.
+                <div className="border border-dashed border-border/80 rounded-xl p-8 text-center text-xs text-muted-foreground space-y-2">
+                  <Sparkles className="w-6 h-6 text-muted-foreground/50 mx-auto" />
+                  <p className="font-medium text-foreground">No suggestions extracted yet.</p>
+                  <p className="text-[11px]">
+                    Click &ldquo;Extract & Verify ICD-11 Codes&rdquo; above to run the AI and verification engine.
                   </p>
                 </div>
               ) : (
@@ -216,8 +231,8 @@ function ReviewContent() {
         </div>
       </div>
 
-      <footer className="mt-12 text-center text-xs text-zinc-400 dark:text-zinc-600 border-t border-zinc-200 dark:border-zinc-800 pt-4">
-        Demo on synthetic data. Not for clinical use.
+      <footer className="mt-12 text-center text-xs text-muted-foreground border-t border-border/70 pt-4">
+        Demo on synthetic data. Not certified for live clinical decision support.
       </footer>
     </div>
   );
@@ -227,8 +242,9 @@ export default function ReviewPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen flex items-center justify-center bg-zinc-50 dark:bg-zinc-950 text-zinc-500 text-sm">
-          Loading review workspace...
+        <div className="min-h-screen flex items-center justify-center bg-background text-muted-foreground text-sm gap-2">
+          <Loader2 className="w-5 h-5 animate-spin text-primary" />
+          <span>Loading review workspace...</span>
         </div>
       }
     >

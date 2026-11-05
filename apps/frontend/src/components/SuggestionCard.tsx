@@ -3,6 +3,10 @@
 import React, { useState } from "react";
 import { VerifiedSuggestion, DecisionCreate } from "@/lib/api";
 import { StatusBadge } from "@/components/StatusBadge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Check, Edit3, X, ChevronDown, ChevronUp, AlertCircle, Quote } from "lucide-react";
 
 interface SuggestionCardProps {
   suggestion: VerifiedSuggestion;
@@ -101,47 +105,57 @@ export const SuggestionCard: React.FC<SuggestionCardProps> = ({
   };
 
   return (
-    <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl p-5 shadow-xs transition-all">
-      <div className="flex items-center justify-between gap-3">
-        <div className="flex items-center gap-3">
-          <span className="font-mono font-bold text-base bg-zinc-100 dark:bg-zinc-800 px-2 py-0.5 rounded text-zinc-900 dark:text-zinc-100">
+    <Card className="border border-border/70 shadow-sm transition-all duration-200 hover:shadow-md">
+      <CardHeader className="p-4 pb-3 flex flex-row items-center justify-between space-y-0 gap-3">
+        <div className="flex items-center gap-2.5 min-w-0">
+          <span className="font-mono font-bold text-xs bg-muted text-foreground px-2.5 py-1 rounded-md border border-border/80 shrink-0">
             {suggestion.code}
           </span>
-          <h4 className="font-semibold text-zinc-900 dark:text-zinc-100 text-sm">
+          <h4 className="font-semibold text-foreground text-sm truncate">
             {suggestion.title}
           </h4>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 shrink-0">
           <StatusBadge status={suggestion.status} />
           {suggestion.status === "rejected" && (
-            <button
+            <Button
+              variant="ghost"
+              size="sm"
               onClick={() => setCollapsed(!collapsed)}
-              className="text-xs text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200 ml-1 underline cursor-pointer"
+              className="h-7 px-2 text-xs text-muted-foreground hover:text-foreground"
               aria-label="Toggle card details"
             >
-              {collapsed ? "Expand" : "Collapse"}
-            </button>
+              {collapsed ? (
+                <span className="flex items-center gap-1">
+                  Expand <ChevronDown className="w-3.5 h-3.5" />
+                </span>
+              ) : (
+                <span className="flex items-center gap-1">
+                  Collapse <ChevronUp className="w-3.5 h-3.5" />
+                </span>
+              )}
+            </Button>
           )}
         </div>
-      </div>
+      </CardHeader>
 
       {!collapsed && (
-        <div className="mt-4 space-y-3 pt-3 border-t border-zinc-100 dark:border-zinc-800">
+        <CardContent className="p-4 pt-1 space-y-3.5 border-t border-border/40">
           <div>
-            <span className="text-xs font-semibold text-zinc-500 uppercase tracking-wider block mb-1">
-              Evidence Quote
+            <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-1 mb-1.5">
+              <Quote className="w-3 h-3" /> Cited Evidence Quote
             </span>
-            <blockquote className="text-xs bg-zinc-50 dark:bg-zinc-800/60 p-2.5 rounded border-l-2 border-zinc-300 dark:border-zinc-700 italic text-zinc-700 dark:text-zinc-300">
+            <blockquote className="text-xs bg-muted/60 p-3 rounded-lg border-l-2 border-primary/60 italic text-foreground/90">
               &ldquo;{suggestion.evidence_quote}&rdquo;
             </blockquote>
           </div>
 
           {suggestion.reasons.length > 0 && (
-            <div>
-              <span className="text-xs font-semibold text-zinc-500 uppercase tracking-wider block mb-1">
-                Verifier Notes
+            <div className="bg-amber-500/10 dark:bg-amber-500/15 p-3 rounded-lg border border-amber-500/20">
+              <span className="text-[11px] font-semibold text-amber-700 dark:text-amber-400 uppercase tracking-wider flex items-center gap-1 mb-1">
+                <AlertCircle className="w-3 h-3" /> Verifier Warnings
               </span>
-              <ul className="list-disc list-inside text-xs text-amber-700 dark:text-amber-400 space-y-0.5">
+              <ul className="list-disc list-inside text-xs text-amber-800 dark:text-amber-300 space-y-1">
                 {suggestion.reasons.map((r, i) => (
                   <li key={i}>{formatReason(r)}</li>
                 ))}
@@ -150,39 +164,40 @@ export const SuggestionCard: React.FC<SuggestionCardProps> = ({
           )}
 
           {errorMsg && (
-            <p className="text-xs text-rose-600 dark:text-rose-400 font-medium bg-rose-50 dark:bg-rose-950/40 p-2 rounded">
-              {errorMsg}
-            </p>
+            <div className="text-xs text-destructive font-medium bg-destructive/10 p-2.5 rounded-lg border border-destructive/20 flex items-center gap-1.5">
+              <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+              <span>{errorMsg}</span>
+            </div>
           )}
 
           {/* Form for reason if approving rejected card or editing */}
           {(suggestion.status === "rejected" || isEditing) && (
-            <div className="space-y-2 pt-1">
+            <div className="space-y-2.5 pt-1">
               {isEditing && (
                 <div>
-                  <label className="text-xs font-medium text-zinc-700 dark:text-zinc-300 block mb-1">
+                  <label className="text-xs font-medium text-foreground block mb-1">
                     New ICD-11 Code:
                   </label>
-                  <input
+                  <Input
                     type="text"
                     value={editedCode}
                     onChange={(e) => setEditedCode(e.target.value)}
-                    className="w-full text-xs font-mono px-3 py-1.5 border border-zinc-300 dark:border-zinc-700 rounded bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100"
+                    className="font-mono text-xs h-8"
                     placeholder="e.g. BA41"
                   />
                 </div>
               )}
               <div>
-                <label className="text-xs font-medium text-zinc-700 dark:text-zinc-300 block mb-1">
+                <label className="text-xs font-medium text-foreground block mb-1">
                   {suggestion.status === "rejected"
-                    ? "Justification to Override Rejection (Required):"
-                    : "Reviewer Comment:"}
+                    ? "Clinical Justification to Override Rejection (Required):"
+                    : "Reviewer Note / Comment:"}
                 </label>
-                <input
+                <Input
                   type="text"
                   value={customReason}
                   onChange={(e) => setCustomReason(e.target.value)}
-                  className="w-full text-xs px-3 py-1.5 border border-zinc-300 dark:border-zinc-700 rounded bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100"
+                  className="text-xs h-8"
                   placeholder="Enter reason..."
                 />
               </div>
@@ -190,57 +205,60 @@ export const SuggestionCard: React.FC<SuggestionCardProps> = ({
           )}
 
           {/* Action Buttons */}
-          <div className="flex items-center gap-2 pt-2">
+          <div className="flex items-center gap-2 pt-1.5">
             {isEditing ? (
               <>
-                <button
-                  type="button"
+                <Button
+                  size="sm"
                   onClick={handleEditSubmit}
                   disabled={isSubmitting}
-                  className="px-3 py-1.5 text-xs font-semibold rounded bg-emerald-600 hover:bg-emerald-700 text-white cursor-pointer disabled:opacity-50"
+                  className="h-8 text-xs font-semibold gap-1.5"
                 >
-                  Save Code
-                </button>
-                <button
-                  type="button"
+                  <Check className="w-3.5 h-3.5" /> Save Code
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
                   onClick={() => setIsEditing(false)}
                   disabled={isSubmitting}
-                  className="px-3 py-1.5 text-xs font-semibold rounded bg-zinc-200 dark:bg-zinc-700 text-zinc-800 dark:text-zinc-200 cursor-pointer"
+                  className="h-8 text-xs"
                 >
                   Cancel
-                </button>
+                </Button>
               </>
             ) : (
               <>
-                <button
-                  type="button"
+                <Button
+                  size="sm"
                   onClick={handleApprove}
                   disabled={isSubmitting}
-                  className="px-3 py-1.5 text-xs font-semibold rounded bg-emerald-600 hover:bg-emerald-700 text-white transition-colors cursor-pointer disabled:opacity-50"
+                  className="h-8 text-xs font-semibold gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white"
                 >
-                  Approve
-                </button>
-                <button
-                  type="button"
+                  <Check className="w-3.5 h-3.5" /> Approve
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
                   onClick={() => setIsEditing(true)}
                   disabled={isSubmitting}
-                  className="px-3 py-1.5 text-xs font-semibold rounded bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-800 dark:text-zinc-200 border border-zinc-300 dark:border-zinc-700 transition-colors cursor-pointer disabled:opacity-50"
+                  className="h-8 text-xs font-medium gap-1.5"
                 >
-                  Edit Code
-                </button>
-                <button
-                  type="button"
+                  <Edit3 className="w-3.5 h-3.5" /> Edit
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
                   onClick={handleReject}
                   disabled={isSubmitting}
-                  className="px-3 py-1.5 text-xs font-semibold rounded bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 text-rose-700 dark:text-rose-300 border border-rose-300 dark:border-rose-800 transition-colors cursor-pointer disabled:opacity-50"
+                  className="h-8 text-xs font-medium gap-1.5 text-destructive hover:bg-destructive/10 hover:text-destructive border-destructive/30"
                 >
-                  Reject
-                </button>
+                  <X className="w-3.5 h-3.5" /> Reject
+                </Button>
               </>
             )}
           </div>
-        </div>
+        </CardContent>
       )}
-    </div>
+    </Card>
   );
 };

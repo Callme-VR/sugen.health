@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { Card } from "@/components/ui/card";
 
 interface SpanHighlight {
   start: number;
@@ -37,18 +38,18 @@ export const NoteViewer: React.FC<NoteViewerProps> = ({ text, highlights }) => {
       const actualStart = Math.max(currentIdx, hl.start);
       const highlightedSub = text.slice(actualStart, hl.end);
 
-      let colorClass = "bg-amber-200/70 border-b-2 border-amber-500 text-amber-950";
+      let colorClass = "bg-amber-100 dark:bg-amber-950/70 border-b-2 border-amber-500 text-amber-950 dark:text-amber-200";
       if (hl.status === "verified") {
-        colorClass = "bg-emerald-200/70 border-b-2 border-emerald-500 text-emerald-950";
+        colorClass = "bg-emerald-100 dark:bg-emerald-950/70 border-b-2 border-emerald-500 text-emerald-950 dark:text-emerald-200";
       } else if (hl.status === "rejected") {
-        colorClass = "bg-rose-200/70 border-b-2 border-rose-500 text-rose-950 line-through decoration-rose-500";
+        colorClass = "bg-rose-100 dark:bg-rose-950/70 border-b-2 border-rose-500 text-rose-950 dark:text-rose-200 line-through decoration-rose-500";
       }
 
       segments.push(
         <mark
           key={`hl-${i}-${actualStart}`}
-          className={`px-1 py-0.5 rounded-sm font-medium transition-colors ${colorClass}`}
-          title={`Evidence for ${hl.code} (${hl.status})`}
+          className={`px-1.5 py-0.5 rounded font-medium transition-colors shadow-2xs ${colorClass}`}
+          title={`Evidence quote for ICD code ${hl.code} (${hl.status})`}
         >
           {highlightedSub}
         </mark>
@@ -64,9 +65,10 @@ export const NoteViewer: React.FC<NoteViewerProps> = ({ text, highlights }) => {
   }
 
   return (
-    <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl p-6 shadow-xs font-mono text-sm leading-relaxed whitespace-pre-wrap select-text text-zinc-900 dark:text-zinc-100">
-      {segments.length > 0 ? segments : text}
-    </div>
+    <Card className="border border-border/80 shadow-xs">
+      <div className="p-6 font-mono text-sm leading-relaxed whitespace-pre-wrap select-text text-foreground">
+        {segments.length > 0 ? segments : text}
+      </div>
+    </Card>
   );
 };
-
