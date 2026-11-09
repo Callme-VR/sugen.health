@@ -11,25 +11,25 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
   const config = {
     verified: {
       label: "Verified",
-      icon: <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />,
-      className: "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800",
+      icon: <CheckCircle2 className="w-3.5 h-3.5 text-[#00b24b]" />,
+      className: "bg-[#00b24b]/10 text-[#00b24b] border-[#00b24b]/30 font-semibold dark:bg-[#00b24b]/15 dark:text-[#00e660] dark:border-[#00b24b]/40",
     },
     needs_review: {
       label: "Needs Review",
-      icon: <AlertTriangle className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />,
-      className: "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/60 dark:text-amber-300 dark:border-amber-800",
+      icon: <AlertTriangle className="w-3.5 h-3.5 text-amber-500" />,
+      className: "bg-amber-500/10 text-amber-600 border-amber-500/30 font-semibold dark:bg-amber-500/15 dark:text-amber-400 dark:border-amber-500/40",
     },
     rejected: {
       label: "Rejected",
-      icon: <XCircle className="w-3.5 h-3.5 text-rose-600 dark:text-rose-400" />,
-      className: "bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950/60 dark:text-rose-300 dark:border-rose-800",
+      icon: <XCircle className="w-3.5 h-3.5 text-rose-500" />,
+      className: "bg-rose-500/10 text-rose-600 border-rose-500/30 font-semibold dark:bg-rose-500/15 dark:text-rose-400 dark:border-rose-500/40",
     },
   }[status];
 
   return (
     <Badge
       variant="outline"
-      className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 font-medium transition-colors ${config.className}`}
+      className={`inline-flex items-center gap-1.5 px-3 py-1 text-xs rounded-full transition-all duration-200 ${config.className}`}
     >
       {config.icon}
       <span>{config.label}</span>

@@ -38,17 +38,17 @@ export const NoteViewer: React.FC<NoteViewerProps> = ({ text, highlights }) => {
       const actualStart = Math.max(currentIdx, hl.start);
       const highlightedSub = text.slice(actualStart, hl.end);
 
-      let colorClass = "bg-amber-100 dark:bg-amber-950/70 border-b-2 border-amber-500 text-amber-950 dark:text-amber-200";
+      let colorClass = "bg-amber-500/20 dark:bg-amber-500/25 border-b-2 border-amber-500 text-amber-900 dark:text-amber-200";
       if (hl.status === "verified") {
-        colorClass = "bg-emerald-100 dark:bg-emerald-950/70 border-b-2 border-emerald-500 text-emerald-950 dark:text-emerald-200";
+        colorClass = "bg-[#00b24b]/20 dark:bg-[#00b24b]/25 border-b-2 border-[#00b24b] text-emerald-950 dark:text-[#00e660]";
       } else if (hl.status === "rejected") {
-        colorClass = "bg-rose-100 dark:bg-rose-950/70 border-b-2 border-rose-500 text-rose-950 dark:text-rose-200 line-through decoration-rose-500";
+        colorClass = "bg-rose-500/20 dark:bg-rose-500/25 border-b-2 border-rose-500 text-rose-950 dark:text-rose-200 line-through decoration-rose-500";
       }
 
       segments.push(
         <mark
           key={`hl-${i}-${actualStart}`}
-          className={`px-1.5 py-0.5 rounded font-medium transition-colors shadow-2xs ${colorClass}`}
+          className={`px-1.5 py-0.5 rounded font-semibold transition-all duration-150 ${colorClass}`}
           title={`Evidence quote for ICD code ${hl.code} (${hl.status})`}
         >
           {highlightedSub}
@@ -65,7 +65,7 @@ export const NoteViewer: React.FC<NoteViewerProps> = ({ text, highlights }) => {
   }
 
   return (
-    <Card className="border border-border/80 shadow-xs">
+    <Card className="rounded-[16px] border border-border/80 bg-card shadow-xs">
       <div className="p-6 font-mono text-sm leading-relaxed whitespace-pre-wrap select-text text-foreground">
         {segments.length > 0 ? segments : text}
       </div>
