@@ -21,10 +21,19 @@ app = FastAPI(
     version="1.0.0",
 )
 
-# CORS
+# CORS Configuration
+raw_origins = [o.strip().rstrip("/") for o in settings.ALLOWED_ORIGIN.split(",") if o.strip()]
+allowed_origins = list(dict.fromkeys([
+    *raw_origins,
+    "https://sugenhealth.vercel.app",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+]))
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[settings.ALLOWED_ORIGIN, "http://localhost:3000", "http://127.0.0.1:3000"],
+    allow_origins=allowed_origins,
+    allow_origin_regex=r"https://.*\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

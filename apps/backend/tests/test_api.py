@@ -86,3 +86,24 @@ def test_analyze_with_mocked_llm(client, monkeypatch):
     # Second suggestion has invalid code
     assert suggestions[1]["code"] == "ZZ99"
     assert suggestions[1]["status"] == "rejected"
+
+
+def test_cors_headers(client):
+    # Test preflight for production Vercel app
+    headers = {
+        "Origin": "https://sugenhealth.vercel.app",
+        "Access-Control-Request-Method": "GET",
+    }
+    res = client.options("/notes", headers=headers)
+    assert res.status_code == 200
+    assert res.headers.get("access-control-allow-origin") == "https://sugenhealth.vercel.app"
+
+    # Test preview vercel deployment via regex
+    headers_preview = {
+        "Origin": "https://sugenhealth-preview-123.vercel.app",
+        "Access-Control-Request-Method": "GET",
+    }
+    res_preview = client.options("/notes", headers=headers_preview)
+    assert res_preview.status_code == 200
+    assert res_preview.headers.get("access-control-allow-origin") == "https://sugenhealth-preview-123.vercel.app"
+

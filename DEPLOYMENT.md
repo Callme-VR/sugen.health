@@ -55,7 +55,7 @@ Under the **Environment** tab, add the following key-value pairs:
 | `LLM_MODEL` | `gemini-flash-lite-latest` | Primary model (cascade falls back automatically) |
 | `DATA_DIR` | `./data` | Path to synthetic notes and tables |
 | `DECISION_LOG` | `./data/decisions.jsonl` | Append-only audit log path |
-| `ALLOWED_ORIGIN` | `https://sugen-health.vercel.app` | Vercel domain (update once Vercel deploys) |
+| `ALLOWED_ORIGIN` | `https://sugenhealth.vercel.app` | Vercel domain (update once Vercel deploys) |
 
 ### Step 3: Deploy & Verify
 1. Click **Create Web Service**.
@@ -104,7 +104,7 @@ Now that your Vercel deployment URL is live:
 1. Open your **Render Dashboard** $\rightarrow$ **sugen-backend** $\rightarrow$ **Environment**.
 2. Update `ALLOWED_ORIGIN` to match your exact Vercel URL:
    ```env
-   ALLOWED_ORIGIN=https://sugen-health.vercel.app
+   ALLOWED_ORIGIN=https://sugenhealth.vercel.app
    ```
 3. Save changes (Render will perform a zero-downtime rolling restart).
 
