@@ -21,6 +21,16 @@ export const metadata: Metadata = {
   title: "Sugen Health — Evidence-Checked ICD-11 Clinical Coding Assistant",
   description:
     "Enterprise-grade clinical coding platform with deterministic evidence verification, zero-trust LLM guardrails, and hospital-grade audit trails.",
+  icons: {
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icon.png", type: "image/png", sizes: "32x32" },
+    ],
+    apple: [
+      { url: "/apple-icon.png", sizes: "180x180", type: "image/png" },
+    ],
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
